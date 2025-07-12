@@ -9,7 +9,6 @@ import Image from "next/image"
 import Link from "next/link"
 import type { Product } from "@/lib/types"
 import { useCartStore, useUserStore } from "@/lib/store"
-import { formatPrice, calculateDiscount } from "@/lib/utils"
 import { cn } from "@/lib/utils"
 
 interface ProductCardProps {
@@ -22,23 +21,31 @@ export function ProductCard({ product, viewMode = "grid", showAddToCart = true }
   const { addItem, updateQuantity, items } = useCartStore()
   const { toggleWishlist, isInWishlist } = useUserStore()
   const [isLoading, setIsLoading] = useState(false)
+  const [isAdding, setIsAdding] = useState(false)
 
   const cartItem = items.find((item) => item.id === product.id)
   const isWishlisted = isInWishlist(product.id)
+  const quantity = cartItem?.quantity || 0
 
   const handleAddToCart = async () => {
     if (!product.inStock) return
 
     setIsLoading(true)
-    try {
-      addItem(product)
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 300))
-    } catch (error) {
-      console.error("Failed to add to cart:", error)
-    } finally {
-      setIsLoading(false)
-    }
+    setIsAdding(true)
+
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+    })
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    setTimeout(() => {
+      setIsAdding(false)
+    }, 300)
   }
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -49,7 +56,9 @@ export function ProductCard({ product, viewMode = "grid", showAddToCart = true }
     toggleWishlist(product.id)
   }
 
-  const discount = calculateDiscount(product.originalPrice, product.price)
+  const discountPercentage = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0
 
   return (
     <Card
@@ -83,7 +92,9 @@ export function ProductCard({ product, viewMode = "grid", showAddToCart = true }
             <Heart className={cn("h-4 w-4", isWishlisted && "fill-red-500 text-red-500")} />
           </Button>
 
-          {discount > 0 && <Badge className="absolute top-2 left-2 bg-green-600">{discount}% OFF</Badge>}
+          {discountPercentage > 0 && (
+            <Badge className="absolute top-2 left-2 bg-green-600">{discountPercentage}% OFF</Badge>
+          )}
 
           {!product.inStock && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
@@ -106,8 +117,9 @@ export function ProductCard({ product, viewMode = "grid", showAddToCart = true }
           <div className="flex items-center mb-2">
             <div className="flex items-center">
               <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              <span className="text-xs text-gray-600 ml-1">{product.rating}</span>
-              <span className="text-xs text-gray-500 ml-1">({product.reviewCount})</span>
+              <span className="text-xs text-gray-600 ml-1">
+                {product.rating} ({product.reviewCount})
+              </span>
             </div>
             <Badge variant="secondary" className="ml-2 text-xs">
               {product.category}
@@ -115,37 +127,35 @@ export function ProductCard({ product, viewMode = "grid", showAddToCart = true }
           </div>
 
           <div className="flex items-center space-x-2 mb-3">
-            <span className="font-bold text-green-600">{formatPrice(product.price)}</span>
-            {product.originalPrice > product.price && (
-              <span className="text-xs text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
+            <span className="font-bold text-green-600">${product.price.toFixed(2)}</span>
+            {product.originalPrice && (
+              <span className="text-xs text-gray-500 line-through">${product.originalPrice.toFixed(2)}</span>
             )}
           </div>
 
-          {product.stockCount <= 5 && product.inStock && (
-            <p className="text-xs text-orange-600 mb-2">Only {product.stockCount} left in stock!</p>
-          )}
+          <p className="text-xs text-gray-500 mb-3">{product.weight}</p>
         </CardContent>
 
         {showAddToCart && (
           <CardFooter className="p-4 pt-0">
             {product.inStock ? (
-              cartItem && cartItem.quantity > 0 ? (
+              quantity > 0 ? (
                 <div className="flex items-center justify-between w-full">
                   <Button
                     variant="outline"
                     size="icon"
                     className="h-8 w-8 border-green-600 text-green-600 bg-transparent"
-                    onClick={() => handleQuantityChange(cartItem.quantity - 1)}
+                    onClick={() => handleQuantityChange(quantity - 1)}
                   >
                     <Minus className="h-3 w-3" />
                   </Button>
-                  <span className="font-semibold text-green-600">{cartItem.quantity}</span>
+                  <span className="font-semibold text-green-600">{quantity}</span>
                   <Button
                     variant="outline"
                     size="icon"
                     className="h-8 w-8 border-green-600 text-green-600 bg-transparent"
-                    onClick={() => handleQuantityChange(cartItem.quantity + 1)}
-                    disabled={cartItem.quantity >= product.stockCount}
+                    onClick={() => handleQuantityChange(quantity + 1)}
+                    disabled={quantity >= product.stockCount}
                   >
                     <Plus className="h-3 w-3" />
                   </Button>
@@ -154,9 +164,9 @@ export function ProductCard({ product, viewMode = "grid", showAddToCart = true }
                 <Button
                   className="w-full bg-green-600 hover:bg-green-700 text-sm"
                   onClick={handleAddToCart}
-                  disabled={isLoading}
+                  disabled={isLoading || isAdding}
                 >
-                  {isLoading ? (
+                  {isAdding ? (
                     <div className="flex items-center space-x-2">
                       <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
                       <span>Adding...</span>

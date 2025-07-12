@@ -1,65 +1,71 @@
 import { db } from "./database"
 import type { User } from "./types"
 
-export interface LoginCredentials {
-  email: string
-  password: string
+export interface AuthResponse {
+  success: boolean
+  user?: User
+  token?: string
+  message?: string
 }
 
-export interface RegisterData {
-  name: string
-  email: string
-  password: string
-  phone: string
-}
+export class AuthService {
+  static async login(email: string, password: string): Promise<AuthResponse> {
+    // Simple authentication - in production, use proper password hashing
+    const user = db.users.findByEmail(email)
 
-// Simple auth simulation (use proper auth in production)
-export const auth = {
-  login: async (credentials: LoginCredentials): Promise<{ user: User; token: string } | null> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    const user = db.users.findByEmail(credentials.email)
-
-    // Simple password check (use proper hashing in production)
-    if (user && credentials.password === "password") {
-      return {
-        user,
-        token: `token-${user.id}-${Date.now()}`,
-      }
+    if (!user) {
+      return { success: false, message: "User not found" }
     }
 
-    return null
-  },
+    // For demo purposes, accept any password for admin@grocery.com
+    if (email === "admin@grocery.com" || password === "password") {
+      const token = this.generateToken(user.id)
+      return { success: true, user, token }
+    }
 
-  register: async (data: RegisterData): Promise<{ user: User; token: string } | null> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    return { success: false, message: "Invalid credentials" }
+  }
 
-    const existingUser = db.users.findByEmail(data.email)
+  static async register(userData: {
+    name: string
+    email: string
+    phone: string
+    password: string
+  }): Promise<AuthResponse> {
+    const existingUser = db.users.findByEmail(userData.email)
+
     if (existingUser) {
-      throw new Error("User already exists")
+      return { success: false, message: "User already exists" }
     }
 
     const user = db.users.create({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
       role: "customer",
       isActive: true,
+      preferences: {
+        notifications: true,
+        marketing: false,
+        darkMode: false,
+      },
     })
 
-    return {
-      user,
-      token: `token-${user.id}-${Date.now()}`,
-    }
-  },
+    const token = this.generateToken(user.id)
+    return { success: true, user, token }
+  }
 
-  verifyToken: async (token: string): Promise<User | null> => {
-    // Simple token verification (use proper JWT in production)
-    if (token.startsWith("token-")) {
-      const userId = token.split("-")[1]
-      return db.users.findById(userId)
+  static generateToken(userId: string): string {
+    // In production, use proper JWT
+    return `token-${userId}-${Date.now()}`
+  }
+
+  static verifyToken(token: string): string | null {
+    // Simple token verification - in production, use proper JWT verification
+    const parts = token.split("-")
+    if (parts.length === 3 && parts[0] === "token") {
+      return parts[1] // Return user ID
     }
     return null
-  },
+  }
 }

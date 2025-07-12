@@ -1,11 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { AuthService } from "@/lib/auth"
 import type { ApiResponse } from "@/lib/types"
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { email, password } = body
+    const { email, password } = await request.json()
 
     if (!email || !password) {
       return NextResponse.json<ApiResponse>(
@@ -17,13 +16,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const result = await auth.login({ email, password })
+    const result = await AuthService.login(email, password)
 
-    if (!result) {
+    if (!result.success) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          error: "Invalid credentials",
+          error: result.message,
         },
         { status: 401 },
       )
@@ -31,7 +30,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json<ApiResponse>({
       success: true,
-      data: result,
+      data: {
+        user: result.user,
+        token: result.token,
+      },
       message: "Login successful",
     })
   } catch (error) {

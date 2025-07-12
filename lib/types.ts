@@ -2,9 +2,9 @@ export interface Product {
   id: number
   name: string
   price: number
-  originalPrice: number
+  originalPrice?: number
   image: string
-  images?: string[]
+  images: string[]
   rating: number
   reviewCount: number
   category: string
@@ -14,7 +14,7 @@ export interface Product {
   stockCount: number
   description: string
   features: string[]
-  nutritionFacts?: {
+  nutritionFacts: {
     calories: number
     carbs: string
     fiber: string
@@ -22,13 +22,9 @@ export interface Product {
     protein: string
     fat: string
   }
-  tags?: string[]
-  weight?: string
-  origin?: string
-  createdAt: string
-  updatedAt: string
-  isActive: boolean
-  sku: string
+  tags: string[]
+  weight: string
+  origin: string
 }
 
 export interface Category {
@@ -36,125 +32,72 @@ export interface Category {
   name: string
   icon: string
   color: string
-  description?: string
-  productCount?: number
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
+  description: string
+  productCount: number
 }
 
 export interface CartItem {
   id: number
   name: string
   price: number
-  quantity: number
   image: string
-  inStock: boolean
-  maxQuantity?: number
+  quantity: number
+  category: string
 }
 
 export interface User {
   id: string
   name: string
   email: string
-  phone: string
+  role: "customer" | "admin"
   avatar?: string
-  role: "admin" | "customer"
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
+  address?: {
+    street: string
+    city: string
+    state: string
+    zipCode: string
+  }
+  phone?: string
   preferences?: {
     notifications: boolean
-    marketing: boolean
-    darkMode: boolean
+    newsletter: boolean
   }
-}
-
-export interface Address {
-  id: number
-  userId: string
-  type: string
-  street: string
-  city: string
-  state: string
-  zipCode: string
-  isDefault: boolean
-  instructions?: string
 }
 
 export interface Order {
   id: string
   userId: string
-  date: string
-  status: "pending" | "confirmed" | "preparing" | "out-for-delivery" | "delivered" | "cancelled"
-  total: number
-  subtotal: number
-  tax: number
-  shipping: number
-  discount: number
   items: CartItem[]
-  deliveryAddress: Address
-  paymentMethod: string
-  paymentStatus: "pending" | "paid" | "failed" | "refunded"
-  deliveryMethod: string
-  estimatedDelivery?: string
-  trackingNumber?: string
-  notes?: string
+  total: number
+  status: "pending" | "confirmed" | "preparing" | "out-for-delivery" | "delivered" | "cancelled"
   createdAt: string
-  updatedAt: string
+  deliveryAddress: {
+    street: string
+    city: string
+    state: string
+    zipCode: string
+  }
+  paymentMethod: string
+  deliveryOption: "standard" | "scheduled" | "express"
+  deliveryFee: number
+  tax: number
+  subtotal: number
 }
 
 export interface Review {
   id: number
-  productId: number
   userId: string
   userName: string
   rating: number
   comment: string
   date: string
   verified: boolean
-  helpful?: number
-  isActive: boolean
+  helpful: number
 }
 
-export interface PromoCode {
-  id: number
-  code: string
-  discount: number
-  type: "percentage" | "fixed"
-  minOrder?: number
-  maxDiscount?: number
-  expiryDate?: string
-  usageLimit?: number
-  usedCount?: number
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-}
-
-export interface Analytics {
-  totalRevenue: number
-  totalOrders: number
-  totalCustomers: number
-  totalProducts: number
-  revenueGrowth: number
-  orderGrowth: number
-  customerGrowth: number
-  topProducts: Array<{ id: number; name: string; sales: number; revenue: number }>
-  topCategories: Array<{ id: number; name: string; sales: number; revenue: number }>
-  recentOrders: Order[]
-  monthlyRevenue: Array<{ month: string; revenue: number; orders: number }>
-}
-
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T> {
   success: boolean
   data?: T
-  message?: string
   error?: string
-  pagination?: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
+  message?: string
 }

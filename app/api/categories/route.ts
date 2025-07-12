@@ -1,17 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/database"
+import { categories } from "@/lib/data"
 import type { ApiResponse } from "@/lib/types"
 
 export async function GET() {
   try {
-    const categories = db.categories.findAll()
-
-    return NextResponse.json<ApiResponse>({
+    return NextResponse.json({
       success: true,
       data: categories,
     })
   } catch (error) {
-    return NextResponse.json<ApiResponse>(
+    return NextResponse.json(
       {
         success: false,
         error: "Failed to fetch categories",
@@ -38,11 +36,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const category = db.categories.create({
+    const category = {
+      id: categories.length + 1,
       ...body,
       productCount: 0,
       isActive: true,
-    })
+    }
+
+    categories.push(category)
 
     return NextResponse.json<ApiResponse>({
       success: true,

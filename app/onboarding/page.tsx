@@ -1,147 +1,129 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowRight, ShoppingCart, Truck, Leaf, Clock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { ArrowRight, ShoppingCart, Truck, Leaf, Clock } from "lucide-react"
 
-const onboardingSteps = [
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
+type Step = {
+  id: number
+  title: string
+  description: string
+  icon: React.ComponentType<{ className?: string }>
+  image: string
+}
+
+const steps: Step[] = [
   {
     id: 1,
     title: "Fresh Groceries Delivered",
     description: "Get the freshest produce, meats, and pantry essentials delivered right to your doorstep.",
-    icon: <ShoppingCart className="h-16 w-16 text-green-600" />,
-    image: "/placeholder.svg",
+    icon: ShoppingCart,
+    image: "/placeholder.svg?height=200&width=300",
   },
   {
     id: 2,
     title: "Fast & Reliable Delivery",
     description: "Choose from same-day delivery, scheduled delivery, or express 30-minute delivery options.",
-    icon: <Truck className="h-16 w-16 text-blue-600" />,
-    image: "/placeholder.svg",
+    icon: Truck,
+    image: "/placeholder.svg?height=200&width=300",
   },
   {
     id: 3,
     title: "100% Organic Options",
     description: "Shop from our wide selection of certified organic products for a healthier lifestyle.",
-    icon: <Leaf className="h-16 w-16 text-green-600" />,
-    image: "/placeholder.svg",
+    icon: Leaf,
+    image: "/placeholder.svg?height=200&width=300",
   },
   {
     id: 4,
     title: "Save Time, Live Better",
     description: "Skip the grocery store lines and spend more time doing what you love.",
-    icon: <Clock className="h-16 w-16 text-purple-600" />,
-    image: "/placeholder.svg",
+    icon: Clock,
+    image: "/placeholder.svg?height=200&width=300",
   },
 ]
 
 export default function OnboardingPage() {
-  const [currentStep, setCurrentStep] = useState(0)
+  const [step, setStep] = useState(0)
 
-  const nextStep = () => {
-    if (currentStep < onboardingSteps.length - 1) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
+  const next = () => step < steps.length - 1 && setStep(step + 1)
+  const prev = () => step > 0 && setStep(step - 1)
 
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
-    }
-  }
-
-  const currentStepData = onboardingSteps[currentStep]
+  const { title, description, icon: Icon, image } = steps[step]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-50 p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">G</span>
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-600">
+            <span className="text-2xl font-bold text-white">G</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-800">GroceryFresh</h1>
         </div>
 
-        {/* Progress Indicators */}
-        <div className="flex justify-center space-x-2 mb-8">
-          {onboardingSteps.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentStep ? 'bg-green-600' : 
-                index < currentStep ? 'bg-green-300' : 'bg-gray-300'
+        {/* Progress Dots */}
+        <div className="mb-8 flex justify-center space-x-2">
+          {steps.map((_, i) => (
+            <span
+              key={i}
+              className={`h-2 w-2 rounded-full transition-colors ${
+                i === step ? "bg-green-600" : i < step ? "bg-green-300" : "bg-gray-300"
               }`}
             />
           ))}
         </div>
 
-        {/* Onboarding Card */}
-        <Card className="border-green-100 shadow-lg mb-8">
+        {/* Step Card */}
+        <Card className="mb-8 border-green-100 shadow-lg">
           <CardContent className="p-8 text-center">
-            {/* Icon */}
-            <div className="mb-6">
-              {currentStepData.icon}
-            </div>
+            <Icon className="mx-auto mb-6 h-16 w-16 text-green-600" />
 
-            {/* Image */}
             <div className="mb-6">
               <Image
-                src={currentStepData.image || "/placeholder.svg"}
-                alt={currentStepData.title}
-                width={200}
-                height={150}
-                className="mx-auto rounded-lg"
+                src={image || "/placeholder.svg"}
+                alt={title}
+                width={300}
+                height={200}
+                className="mx-auto rounded-lg object-cover"
               />
             </div>
 
-            {/* Content */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              {currentStepData.title}
-            </h2>
-            <p className="text-gray-600 leading-relaxed">
-              {currentStepData.description}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-gray-800">{title}</h2>
+            <p className="text-gray-600">{description}</p>
           </CardContent>
         </Card>
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mb-6">
-          <Button
-            variant="ghost"
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            className="text-gray-600"
-          >
+        {/* Navigation */}
+        <div className="mb-6 flex items-center justify-between">
+          <Button variant="ghost" disabled={step === 0} onClick={prev}>
             Previous
           </Button>
 
           <span className="text-sm text-gray-500">
-            {currentStep + 1} of {onboardingSteps.length}
+            {step + 1} / {steps.length}
           </span>
 
-          {currentStep < onboardingSteps.length - 1 ? (
-            <Button
-              onClick={nextStep}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              Next
-              <ArrowRight className="h-4 w-4 ml-2" />
+          {step < steps.length - 1 ? (
+            <Button onClick={next} className="bg-green-600 hover:bg-green-700">
+              Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
             <Link href="/login">
               <Button className="bg-green-600 hover:bg-green-700">
-                Get Started
-                <ArrowRight className="h-4 w-4 ml-2" />
+                Get Started <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           )}
         </div>
 
-        {/* Skip Button */}
+        {/* Skip */}
         <div className="text-center">
           <Link href="/login">
             <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
@@ -150,20 +132,32 @@ export default function OnboardingPage() {
           </Link>
         </div>
 
-        {/* Features Preview */}
-        {currentStep === onboardingSteps.length - 1 && (
+        {/* Feature Teasers (only on last step) */}
+        {step === steps.length - 1 && (
           <div className="mt-8 grid grid-cols-2 gap-4">
-            <div className="text-center p-4 bg-white rounded-lg border border-green-100">
-              <div className="text-2xl mb-2">🚚</div>
-              <p className="text-xs font-medium">Free Delivery</p>
-              <p className="text-xs text-gray-600">On orders $50+</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-lg border border-green-100">
-              <div className="text-2xl mb-2">⚡</div>
-              <p className="text-xs font-medium">30min Express</p>
-              <p className="text-xs text-gray-600">Ultra-fast delivery</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-lg border border-green-100">
-              <div className="text-2xl mb-2">🌱</div>
-              <p className="text-xs font-medium">100% Organic</p>
-              <p className="text-xs text-gray-600">\
+            <Feature emoji="🚚" title="Free Delivery" subtitle="On orders $50+" />
+            <Feature emoji="⚡" title="30-min Express" subtitle="Ultra-fast" />
+            <Feature emoji="🌱" title="100% Organic" subtitle="Healthy choices" />
+            <Feature emoji="💳" title="Secure Checkout" subtitle="PCI-DSS" />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+interface FeatureProps {
+  emoji: string
+  title: string
+  subtitle: string
+}
+
+function Feature({ emoji, title, subtitle }: FeatureProps) {
+  return (
+    <div className="rounded-lg border border-green-100 bg-white p-4 text-center">
+      <div className="mb-2 text-2xl">{emoji}</div>
+      <p className="text-xs font-medium">{title}</p>
+      <p className="text-xs text-gray-600">{subtitle}</p>
+    </div>
+  )
+}

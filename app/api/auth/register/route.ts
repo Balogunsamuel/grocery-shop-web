@@ -1,13 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { AuthService } from "@/lib/auth"
 import type { ApiResponse } from "@/lib/types"
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { name, email, password, phone } = body
+    const { name, email, phone, password } = await request.json()
 
-    if (!name || !email || !password || !phone) {
+    if (!name || !email || !phone || !password) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -17,20 +16,33 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const result = await auth.register({ name, email, password, phone })
+    const result = await AuthService.register({ name, email, phone, password })
+
+    if (!result.success) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          error: result.message,
+        },
+        { status: 400 },
+      )
+    }
 
     return NextResponse.json<ApiResponse>({
       success: true,
-      data: result,
+      data: {
+        user: result.user,
+        token: result.token,
+      },
       message: "Registration successful",
     })
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        error: error.message || "Internal server error",
+        error: "Internal server error",
       },
-      { status: 400 },
+      { status: 500 },
     )
   }
 }

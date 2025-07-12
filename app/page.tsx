@@ -13,21 +13,68 @@ import { SearchBar } from "@/components/search-bar"
 import { ErrorBoundary } from "@/components/ui/error-boundary"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useCartStore, useUserStore } from "@/lib/store"
-import { categories, products, promoSlides } from "@/lib/data"
+import type { Product, Category } from "@/lib/types"
+
+const promoSlides = [
+  {
+    id: 1,
+    title: "Fresh Fruits & Vegetables",
+    subtitle: "Up to 30% off on organic produce",
+    cta: "Shop Now",
+    link: "/category/1",
+    color: "bg-gradient-to-r from-green-500 to-green-600",
+    image: "/placeholder.svg?height=200&width=200",
+  },
+  {
+    id: 2,
+    title: "Dairy Products",
+    subtitle: "Farm fresh milk and cheese",
+    cta: "Explore",
+    link: "/category/3",
+    color: "bg-gradient-to-r from-blue-500 to-blue-600",
+    image: "/placeholder.svg?height=200&width=200",
+  },
+]
 
 export default function HomePage() {
   const { getTotalItems } = useCartStore()
   const { user } = useUserStore()
   const [isLoading, setIsLoading] = useState(true)
-  const [featuredProducts, setFeaturedProducts] = useState(products.slice(0, 8))
+  const [categories, setCategories] = useState<Category[]>([])
+  const [productsByCategory, setProductsByCategory] = useState<Record<number, Product[]>>({})
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
+    const fetchData = async () => {
+      try {
+        // Fetch categories
+        const categoriesResponse = await fetch("/api/categories")
+        const categoriesData = await categoriesResponse.json()
 
-    return () => clearTimeout(timer)
+        if (categoriesData.success) {
+          setCategories(categoriesData.data)
+
+          // Fetch products for each category
+          const productsData: Record<number, Product[]> = {}
+
+          for (const category of categoriesData.data) {
+            const productsResponse = await fetch(`/api/products?category=${category.id}&limit=4`)
+            const categoryProducts = await productsResponse.json()
+
+            if (categoryProducts.success) {
+              productsData[category.id] = categoryProducts.data
+            }
+          }
+
+          setProductsByCategory(productsData)
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
   }, [])
 
   const totalItems = getTotalItems()
@@ -127,48 +174,40 @@ export default function HomePage() {
           </Carousel>
         </section>
 
-        {/* Categories */}
-        <section className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Shop by Category</h2>
-            <Link href="/categories">
-              <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50 bg-transparent">
-                View All
-              </Button>
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-            {categories.map((category) => (
-              <Link key={category.id} href={`/category/${category.id}`}>
-                <Card className="hover:shadow-md transition-shadow cursor-pointer border-green-100 hover:border-green-300 group">
-                  <CardContent className="p-4 text-center">
-                    <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">{category.icon}</div>
-                    <h3 className="font-medium text-sm text-gray-700">{category.name}</h3>
-                    <p className="text-xs text-gray-500 mt-1">{category.productCount} items</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {/* Products by Category */}
+        {categories.map((category) => {
+          const categoryProducts = productsByCategory[category.id] || []
 
-        {/* Featured Products */}
-        <section className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
-            <Link href="/products">
-              <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50 bg-transparent">
-                View All Products
-              </Button>
-            </Link>
-          </div>
+          if (categoryProducts.length === 0) return null
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </section>
+          return (
+            <section key={category.id} className="container mx-auto px-4 py-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <span className="text-3xl">{category.icon}</span>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800">{category.name}</h2>
+                    <p className="text-gray-600">{category.description}</p>
+                  </div>
+                </div>
+                <Link href={`/category/${category.id}`}>
+                  <Button
+                    variant="outline"
+                    className="border-green-600 text-green-600 hover:bg-green-50 bg-transparent"
+                  >
+                    View All
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {categoryProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
+          )
+        })}
 
         {/* Features */}
         <section className="container mx-auto px-4 py-6">
