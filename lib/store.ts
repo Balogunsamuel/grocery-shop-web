@@ -18,12 +18,15 @@ interface UserStore {
   user: User | null
   addresses: Address[]
   wishlist: number[]
+  isAuthenticated: boolean
   setUser: (user: User) => void
+  logout: () => void
   addAddress: (address: Omit<Address, "id">) => void
   updateAddress: (id: number, address: Partial<Address>) => void
   removeAddress: (id: number) => void
   toggleWishlist: (productId: number) => void
   isInWishlist: (productId: number) => boolean
+  isAdmin: () => boolean
 }
 
 interface AppStore {
@@ -33,12 +36,16 @@ interface AppStore {
   selectedBrands: string[]
   sortBy: string
   viewMode: "grid" | "list"
+  isLoading: boolean
+  error: string | null
   setSearchQuery: (query: string) => void
   setSelectedCategory: (categoryId: number | null) => void
   setPriceRange: (range: [number, number]) => void
   setSelectedBrands: (brands: string[]) => void
   setSortBy: (sortBy: string) => void
   setViewMode: (mode: "grid" | "list") => void
+  setLoading: (loading: boolean) => void
+  setError: (error: string | null) => void
   clearFilters: () => void
 }
 
@@ -99,7 +106,9 @@ export const useUserStore = create<UserStore>()(
       user: null,
       addresses: [],
       wishlist: [],
-      setUser: (user) => set({ user }),
+      isAuthenticated: false,
+      setUser: (user) => set({ user, isAuthenticated: true }),
+      logout: () => set({ user: null, isAuthenticated: false, addresses: [], wishlist: [] }),
       addAddress: (address) => {
         const addresses = get().addresses
         const newAddress = { ...address, id: Date.now() }
@@ -122,6 +131,7 @@ export const useUserStore = create<UserStore>()(
         }
       },
       isInWishlist: (productId) => get().wishlist.includes(productId),
+      isAdmin: () => get().user?.role === "admin",
     }),
     {
       name: "user-storage",
@@ -136,12 +146,16 @@ export const useAppStore = create<AppStore>((set) => ({
   selectedBrands: [],
   sortBy: "featured",
   viewMode: "grid",
+  isLoading: false,
+  error: null,
   setSearchQuery: (query) => set({ searchQuery: query }),
   setSelectedCategory: (categoryId) => set({ selectedCategory: categoryId }),
   setPriceRange: (range) => set({ priceRange: range }),
   setSelectedBrands: (brands) => set({ selectedBrands: brands }),
   setSortBy: (sortBy) => set({ sortBy }),
   setViewMode: (mode) => set({ viewMode: mode }),
+  setLoading: (loading) => set({ isLoading: loading }),
+  setError: (error) => set({ error }),
   clearFilters: () =>
     set({
       searchQuery: "",
