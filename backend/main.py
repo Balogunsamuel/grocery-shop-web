@@ -2,9 +2,9 @@ from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
-from .database import connect_to_mongo, close_mongo_connection
-from .routers import auth, products, categories, orders, payments, admin
-from .models import ApiResponse
+from database import connect_to_mongo, close_mongo_connection
+from routers import auth, products, categories, orders, payments, admin
+from models import ApiResponse
 import os
 from dotenv import load_dotenv
 
