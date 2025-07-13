@@ -1,30 +1,65 @@
-# Grocery App Design
+# Grocery Ecommerce App
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+## Getting Started
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/balogunsamuels-projects/v0-grocery-app-design)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/9VfnDIRWZy3)
+Follow these steps to run the project locally:
 
-## Overview
+### 1. Install Dependencies
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+Using pnpm (recommended):
+```sh
+pnpm install
+```
+Or using npm:
+```sh
+npm install
+```
+Or using yarn:
+```sh
+yarn install
+```
 
-## Deployment
+### 2. Start the Development Server
 
-Your project is live at:
+Using pnpm:
+```sh
+pnpm dev
+```
+Or using npm:
+```sh
+npm run dev
+```
+Or using yarn:
+```sh
+yarn dev
+```
 
-**[https://vercel.com/balogunsamuels-projects/v0-grocery-app-design](https://vercel.com/balogunsamuels-projects/v0-grocery-app-design)**
+The app will be running at [http://localhost:3000](http://localhost:3000)
 
-## Build your app
+### 3. Build for Production
 
-Continue building your app on:
+To build the app for production:
+```sh
+pnpm build
+```
+Or:
+```sh
+npm run build
+```
+Or:
+```sh
+yarn build
+```
 
-**[https://v0.dev/chat/projects/9VfnDIRWZy3](https://v0.dev/chat/projects/9VfnDIRWZy3)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+To start the production server after building:
+```sh
+pnpm start
+```
+Or:
+```sh
+npm start
+```
+Or:
+```sh
+yarn start
+```
