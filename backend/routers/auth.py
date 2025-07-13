@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import HTTPBearer
 from datetime import timedelta, datetime
-from ..models import User, UserCreate, UserLogin, Token, ApiResponse, UserRole
-from ..database import get_collection
-from ..auth import authenticate_user, create_access_token, get_password_hash, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from models import User, UserCreate, UserLogin, Token, ApiResponse, UserRole
+from database import get_collection
+from auth import authenticate_user, create_access_token, get_password_hash, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
 from bson import ObjectId
 
 router = APIRouter()
