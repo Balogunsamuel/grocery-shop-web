@@ -57,7 +57,7 @@ async def create_checkout_session(
         # Create checkout session request
         if checkout_data.amount is not None:
             # Custom amount checkout
-            checkout_request = CheckoutSessionRequest(
+            checkout_request = StripeCheckoutRequest(
                 amount=checkout_data.amount,
                 currency=checkout_data.currency,
                 success_url=success_url,
