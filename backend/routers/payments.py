@@ -72,7 +72,7 @@ async def create_checkout_session(
                     detail="Either amount or stripe_price_id must be provided"
                 )
             
-            checkout_request = CheckoutSessionRequest(
+            checkout_request = StripeCheckoutRequest(
                 stripe_price_id=checkout_data.stripe_price_id,
                 quantity=checkout_data.quantity,
                 success_url=success_url,
