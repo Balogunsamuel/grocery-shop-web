@@ -2,9 +2,9 @@
 Initialize the database with sample data
 """
 from motor.motor_asyncio import AsyncIOMotorClient
-from .models import Product, Category, User, NutritionFacts, UserRole
-from .auth import get_password_hash
-from .database import MONGODB_URL
+from models import Product, Category, User, NutritionFacts, UserRole
+from auth import get_password_hash
+from database import MONGODB_URL
 import asyncio
 
 async def init_database():
