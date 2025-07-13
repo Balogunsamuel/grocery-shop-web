@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
-from ..models import Category, CategoryCreate, CategoryUpdate, ApiResponse, User
-from ..database import get_collection
-from ..auth import get_current_admin_user
+from models import Category, CategoryCreate, CategoryUpdate, ApiResponse, User
+from database import get_collection
+from auth import get_current_admin_user
 from datetime import datetime
 
 router = APIRouter()
