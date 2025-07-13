@@ -339,7 +339,7 @@ async def init_database():
     print("Email: admin@grocery.com")
     print("Password: admin123")
     
-    await client.close()
+    client.close()
 
 if __name__ == "__main__":
     asyncio.run(init_database())
