@@ -18,14 +18,19 @@ if not STRIPE_SECRET_KEY:
 
 stripe_checkout = StripeCheckout(api_key=STRIPE_SECRET_KEY)
 
+from pydantic import BaseModel
+
+class CheckoutSessionRequest(BaseModel):
+    amount: Optional[float] = None
+    currency: str = "usd"
+    stripe_price_id: Optional[str] = None
+    quantity: int = 1
+    metadata: Optional[Dict[str, Any]] = None
+
 @router.post("/checkout/session")
 async def create_checkout_session(
     request: Request,
-    amount: Optional[float] = None,
-    currency: str = "usd",
-    stripe_price_id: Optional[str] = None,
-    quantity: int = 1,
-    metadata: Optional[Dict[str, Any]] = None,
+    checkout_data: CheckoutSessionRequest,
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -42,8 +47,7 @@ async def create_checkout_session(
         cancel_url = f"{base_url}/cart"
         
         # Prepare metadata
-        if metadata is None:
-            metadata = {}
+        metadata = checkout_data.metadata or {}
         metadata.update({
             "user_id": current_user.id,
             "user_email": current_user.email,
@@ -51,26 +55,26 @@ async def create_checkout_session(
         })
         
         # Create checkout session request
-        if amount is not None:
+        if checkout_data.amount is not None:
             # Custom amount checkout
             checkout_request = CheckoutSessionRequest(
-                amount=amount,
-                currency=currency,
+                amount=checkout_data.amount,
+                currency=checkout_data.currency,
                 success_url=success_url,
                 cancel_url=cancel_url,
                 metadata=metadata
             )
         else:
             # Fixed price checkout
-            if not stripe_price_id:
+            if not checkout_data.stripe_price_id:
                 raise HTTPException(
                     status_code=400,
                     detail="Either amount or stripe_price_id must be provided"
                 )
             
             checkout_request = CheckoutSessionRequest(
-                stripe_price_id=stripe_price_id,
-                quantity=quantity,
+                stripe_price_id=checkout_data.stripe_price_id,
+                quantity=checkout_data.quantity,
                 success_url=success_url,
                 cancel_url=cancel_url,
                 metadata=metadata
@@ -83,8 +87,8 @@ async def create_checkout_session(
         payment_transaction = PaymentTransaction(
             user_id=current_user.id,
             session_id=session.session_id,
-            amount=amount or 0.0,  # For fixed price, amount will be updated when status is checked
-            currency=currency,
+            amount=checkout_data.amount or 0.0,  # For fixed price, amount will be updated when status is checked
+            currency=checkout_data.currency,
             payment_status=PaymentStatus.INITIATED,
             metadata=metadata
         )
