@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import Optional, List
-from ..models import (
+from models import (
     ApiResponse, PaginatedResponse, User, Order, OrderStatus, 
     OrderUpdate, Product, Category, PaymentTransaction
 )
-from ..database import get_collection
-from ..auth import get_current_admin_user
+from database import get_collection
+from auth import get_current_admin_user
 from datetime import datetime, timedelta
 
 router = APIRouter()
