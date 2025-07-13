@@ -4,8 +4,8 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from motor.motor_asyncio import AsyncIOMotorClient
-from .database import get_collection
-from .models import User, TokenData
+from database import get_collection
+from models import User, TokenData
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
