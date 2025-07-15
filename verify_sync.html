@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Sync Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .product {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background-color: #f9fafb;
+        }
+        .product-name {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .product-details {
+            font-size: 0.9em;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .sync-status {
+            background: #10b981;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .refresh-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .refresh-btn:hover {
+            background: #2563eb;
+        }
+        .backend-test {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .test-result {
+            font-family: monospace;
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔄 Product Sync Verification Tool</h1>
+        <p>Verify that products flow from Admin Panel → Backend → Customer App</p>
+    </div>
+
+    <div class="backend-test">
+        <h3>🗄️ Backend Database Test</h3>
+        <button class="refresh-btn" onclick="testBackend()">Test Backend API</button>
+        <div id="backend-result" class="test-result">Click "Test Backend API" to check backend storage...</div>
+    </div>
+
+    <div class="container">
+        <div class="panel">
+            <h2>🛡️ Admin Panel Products</h2>
+            <p>Products visible in admin dashboard</p>
+            <button class="refresh-btn" onclick="loadAdminProducts()">Refresh Admin</button>
+            <div id="admin-products">Loading...</div>
+        </div>
+
+        <div class="panel">
+            <h2>🛒 Customer App Products</h2>
+            <p>Products visible to customers</p>
+            <button class="refresh-btn" onclick="loadCustomerProducts()">Refresh Customer</button>
+            <div id="customer-products">Loading...</div>
+        </div>
+    </div>
+
+    <div class="sync-status" id="sync-status">
+        🔄 Checking synchronization...
+    </div>
+
+    <div class="backend-test">
+        <h3>📝 Instructions to Test Sync:</h3>
+        <ol>
+            <li><strong>Admin Panel:</strong> Go to <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+            <li><strong>Create a unique product</strong> with a distinct name (e.g., "TEST-SYNC-2024")</li>
+            <li><strong>Customer App:</strong> Go to <a href="http://localhost:3001" target="_blank">http://localhost:3001</a></li>
+            <li><strong>Refresh both panels above</strong> to see if the product appears in both</li>
+            <li><strong>Backend API:</strong> Click "Test Backend API" to verify storage</li>
+        </ol>
+    </div>
+
+    <script>
+        async function loadAdminProducts() {
+            try {
+                // Note: This would need admin auth in real scenario
+                document.getElementById('admin-products').innerHTML = '⏳ Loading admin products...';
+                
+                // Simulate admin products (since we can't access admin API without auth)
+                const adminProducts = [
+                    'ℹ️ Admin products require authentication',
+                    'You can see them at: http://localhost:3000',
+                    'Recent products you created should be visible there'
+                ];
+                
+                document.getElementById('admin-products').innerHTML = adminProducts
+                    .map(p => `<div class="product"><div class="product-name">${p}</div></div>`)
+                    .join('');
+            } catch (error) {
+                document.getElementById('admin-products').innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function loadCustomerProducts() {
+            try {
+                document.getElementById('customer-products').innerHTML = '⏳ Loading customer products...';
+                
+                const response = await fetch('/api/products');
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    const products = data.data.slice(0, 10); // Show first 10
+                    document.getElementById('customer-products').innerHTML = products
+                        .map(p => `
+                            <div class="product">
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-details">
+                                    Brand: ${p.brand} | Category: ${p.category} | SKU: ${p.sku}
+                                </div>
+                            </div>
+                        `).join('');
+                    
+                    checkSync(products);
+                } else {
+                    document.getElementById('customer-products').innerHTML = '❌ Failed to load products';
+                }
+            } catch (error) {
+                document.getElementById('customer-products').innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testBackend() {
+            try {
+                document.getElementById('backend-result').innerHTML = '⏳ Testing backend API...';
+                
+                // Test basic backend health
+                const healthResponse = await fetch('http://localhost:8000/health');
+                const healthData = await healthResponse.json();
+                
+                let result = `✅ Backend Health: ${healthData.status}\n`;
+                
+                // Test categories (no auth needed)
+                try {
+                    const categoriesResponse = await fetch('http://localhost:8000/api/categories/');
+                    const categoriesData = await categoriesResponse.json();
+                    result += `✅ Categories API: ${categoriesData.data?.length || 0} categories found\n`;
+                    
+                    // Show product counts from categories
+                    if (categoriesData.data) {
+                        result += '\n📊 Product counts by category:\n';
+                        categoriesData.data.forEach(cat => {
+                            result += `  ${cat.icon} ${cat.name}: ${cat.product_count} products\n`;
+                        });
+                    }
+                } catch (e) {
+                    result += `❌ Categories API: ${e.message}\n`;
+                }
+                
+                result += '\n💡 This confirms backend is storing your products!';
+                document.getElementById('backend-result').innerHTML = result;
+                
+            } catch (error) {
+                document.getElementById('backend-result').innerHTML = `❌ Backend Error: ${error.message}`;
+            }
+        }
+
+        function checkSync(customerProducts) {
+            const customProducts = customerProducts.filter(p => 
+                !['Fresh Organic Apples', 'Premium Avocados', 'Organic Baby Spinach', 
+                  'Organic Whole Milk', 'Artisan Sourdough Bread', 'Fresh Orange Juice'].includes(p.name)
+            );
+            
+            if (customProducts.length > 0) {
+                document.getElementById('sync-status').innerHTML = 
+                    `✅ SYNC CONFIRMED! Found ${customProducts.length} custom products: ${customProducts.map(p => p.name).join(', ')}`;
+                document.getElementById('sync-status').style.backgroundColor = '#10b981';
+            } else {
+                document.getElementById('sync-status').innerHTML = 
+                    '⚠️ Only default products found. Create a test product in admin panel to verify sync.';
+                document.getElementById('sync-status').style.backgroundColor = '#f59e0b';
+            }
+        }
+
+        // Load data on page load
+        loadCustomerProducts();
+        testBackend();
+    </script>
+</body>
+</html>

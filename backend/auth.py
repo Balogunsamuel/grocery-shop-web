@@ -32,11 +32,18 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 async def get_user_by_email(email: str):
-    users_collection = await get_collection("users")
-    user_data = await users_collection.find_one({"email": email, "is_active": True})
-    if user_data:
-        return User(**user_data)
-    return None
+    try:
+        users_collection = await get_collection("users")
+        user_data = await users_collection.find_one({"email": email, "is_active": True})
+        if user_data:
+            # Convert MongoDB _id to id for Pydantic
+            if "_id" in user_data:
+                user_data["id"] = user_data["_id"]
+            return User(**user_data)
+        return None
+    except Exception as e:
+        print(f"Error getting user by email: {e}")
+        return None
 
 async def authenticate_user(email: str, password: str):
     user = await get_user_by_email(email)

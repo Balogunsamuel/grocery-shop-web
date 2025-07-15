@@ -24,7 +24,7 @@ async def get_products(
         # Build query
         query = {"is_active": True}
         if category:
-            query["category_id"] = category
+            query["category"] = category
         if search:
             query["$or"] = [
                 {"name": {"$regex": search, "$options": "i"}},

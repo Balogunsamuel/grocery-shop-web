@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { apiClient } from '@/lib/api';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { AddProductModal } from '@/components/forms/add-product-modal';
 import { 
   Plus, 
   Search, 
@@ -46,6 +47,7 @@ export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showInactive, setShowInactive] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -103,10 +105,25 @@ export default function ProductsPage() {
             <h1 className="text-3xl font-bold">Products</h1>
             <p className="text-gray-500 mt-1">Manage your product inventory</p>
           </div>
-          <Button className="bg-emerald-600 hover:bg-emerald-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Product
-          </Button>
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline"
+              onClick={fetchProducts}
+              className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
+            >
+              <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </Button>
+            <Button 
+              className="bg-emerald-600 hover:bg-emerald-700"
+              onClick={() => setShowAddModal(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
+          </div>
         </div>
 
         {/* Filters and Search */}
@@ -127,6 +144,17 @@ export default function ProductsPage() {
             <Filter className="h-4 w-4 mr-2" />
             {showInactive ? 'Show Active Only' : 'Show All Products'}
           </Button>
+        </div>
+
+        {/* Sync Status */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <p className="text-sm text-blue-800">
+              <strong>Auto-Sync Enabled:</strong> All products added here will automatically appear in the customer app. 
+              Use the "Refresh" button to reload if products don't appear immediately.
+            </p>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -322,6 +350,16 @@ export default function ProductsPage() {
             </div>
           </div>
         )}
+
+        {/* Add Product Modal */}
+        <AddProductModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => {
+            fetchProducts();
+            setShowAddModal(false);
+          }}
+        />
       </div>
     </AdminLayout>
   );

@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
   Store,
+  UserPlus,
 } from 'lucide-react';
 
 const navigation = [
@@ -47,6 +48,11 @@ const navigation = [
     name: 'Payments',
     href: '/payments',
     icon: CreditCard,
+  },
+  {
+    name: 'Register Admin',
+    href: '/register',
+    icon: UserPlus,
   },
   {
     name: 'Settings',

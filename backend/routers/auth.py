@@ -37,7 +37,7 @@ async def register_user(user_data: UserCreate):
         )
         
         # Insert user into database
-        user_dict = user.dict(by_alias=True)
+        user_dict = user.model_dump(by_alias=True) if hasattr(user, 'model_dump') else user.dict(by_alias=True)
         await users_collection.insert_one(user_dict)
         
         # Remove password from response
@@ -63,21 +63,24 @@ async def login_user(user_credentials: UserLogin):
     Login user and return access token
     """
     try:
+        print(f"Login attempt for email: {user_credentials.email}")
         user = await authenticate_user(user_credentials.email, user_credentials.password)
         if not user:
+            print("Authentication failed - user not found or wrong password")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect email or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
+        print(f"User authenticated successfully: {user.email}")
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": user.email}, expires_delta=access_token_expires
         )
         
         # Remove password from user data
-        user_dict = user.dict()
+        user_dict = user.model_dump() if hasattr(user, 'model_dump') else user.dict()
         user_dict.pop("hashed_password", None)
         
         return ApiResponse(
@@ -93,6 +96,9 @@ async def login_user(user_credentials: UserLogin):
     except HTTPException:
         raise
     except Exception as e:
+        print(f"Login error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=500,
             detail=f"Failed to login: {str(e)}"

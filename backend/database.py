@@ -14,7 +14,25 @@ async def get_database():
 
 async def connect_to_mongo():
     global client
-    client = AsyncIOMotorClient(MONGODB_URL)
+    try:
+        if MONGODB_URL.startswith("mongodb+srv://"):
+            # For MongoDB Atlas
+            client = AsyncIOMotorClient(MONGODB_URL, retryWrites=True, w="majority")
+        else:
+            # For local MongoDB
+            client = AsyncIOMotorClient(MONGODB_URL)
+        
+        # Test the connection
+        await client.admin.command('ping')
+        print("Connected to MongoDB successfully")
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {e}")
+        # Fallback to local MongoDB if Atlas fails
+        if MONGODB_URL.startswith("mongodb+srv://"):
+            print("Falling back to local MongoDB...")
+            client = AsyncIOMotorClient("mongodb://localhost:27017/grocery_db")
+        else:
+            raise
     
 async def close_mongo_connection():
     global client

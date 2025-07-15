@@ -2,13 +2,71 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import Optional, List
 from models import (
     ApiResponse, PaginatedResponse, User, Order, OrderStatus, 
-    OrderUpdate, Product, Category, PaymentTransaction
+    OrderUpdate, Product, Category, PaymentTransaction, UserRole
 )
 from database import get_collection
-from auth import get_current_admin_user
+from auth import get_current_admin_user, get_password_hash
 from datetime import datetime, timedelta
+from pydantic import BaseModel, EmailStr, Field
 
 router = APIRouter()
+
+class AdminRegister(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    phone: str = Field(..., min_length=10, max_length=15)
+    password: str = Field(..., min_length=6)
+
+@router.post("/register", response_model=ApiResponse)
+async def register_admin(
+    admin_data: AdminRegister,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """
+    Register a new admin user (Admin only)
+    """
+    try:
+        users_collection = await get_collection("users")
+        
+        # Check if email already exists
+        existing_user = await users_collection.find_one({"email": admin_data.email})
+        if existing_user:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already registered"
+            )
+        
+        # Create new admin user
+        new_admin = User(
+            name=admin_data.name,
+            email=admin_data.email,
+            phone=admin_data.phone,
+            role=UserRole.ADMIN,
+            hashed_password=get_password_hash(admin_data.password),
+            is_verified=True
+        )
+        
+        # Insert into database
+        admin_dict = new_admin.model_dump(by_alias=True) if hasattr(new_admin, 'model_dump') else new_admin.dict(by_alias=True)
+        await users_collection.insert_one(admin_dict)
+        
+        # Remove password from response
+        admin_response = new_admin.model_dump(by_alias=True) if hasattr(new_admin, 'model_dump') else new_admin.dict(by_alias=True)
+        admin_response.pop("hashed_password", None)
+        
+        return ApiResponse(
+            success=True,
+            message="Admin user registered successfully",
+            data=admin_response
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to register admin: {str(e)}"
+        )
 
 @router.get("/dashboard", response_model=ApiResponse)
 async def get_admin_dashboard(

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { apiClient } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
+import { AddCategoryModal } from '@/components/forms/add-category-modal';
 import { 
   Plus, 
   Search, 
@@ -35,6 +36,7 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -81,7 +83,10 @@ export default function CategoriesPage() {
             <h1 className="text-3xl font-bold">Categories</h1>
             <p className="text-gray-500 mt-1">Organize your products into categories</p>
           </div>
-          <Button className="bg-emerald-600 hover:bg-emerald-700">
+          <Button 
+            className="bg-emerald-600 hover:bg-emerald-700"
+            onClick={() => setShowAddModal(true)}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Category
           </Button>
@@ -277,6 +282,16 @@ export default function CategoriesPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Add Category Modal */}
+        <AddCategoryModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => {
+            fetchCategories();
+            setShowAddModal(false);
+          }}
+        />
       </div>
     </AdminLayout>
   );

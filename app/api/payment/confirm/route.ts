@@ -1,26 +1,32 @@
 import { NextResponse } from "next/server"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 export async function POST(request: Request) {
   try {
     const { paymentIntentId, paymentMethodId } = await request.json()
 
-    // Simulate payment confirmation
-    await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulate processing time
+    // Send payment confirmation request to backend API
+    const response = await fetch(`${API_URL}/api/payments/confirm`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ paymentIntentId, paymentMethodId }),
+    })
 
-    const confirmedPayment = {
-      id: paymentIntentId,
-      status: "succeeded",
-      amount_received: Math.floor(Math.random() * 10000) + 1000, // Random amount
-      currency: "usd",
-      payment_method: paymentMethodId,
-      created: Math.floor(Date.now() / 1000),
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
+
+    const data = await response.json()
 
     return NextResponse.json({
       success: true,
-      data: confirmedPayment,
+      data: data.data,
     })
   } catch (error) {
+    console.error('Payment confirmation failed:', error)
     return NextResponse.json(
       {
         success: false,

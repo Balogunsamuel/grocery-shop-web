@@ -155,6 +155,19 @@ class ApiClient {
   async getPayments(page: number = 1, size: number = 10) {
     return this.request(`/api/admin/payments?page=${page}&size=${size}`);
   }
+
+  // Admin registration
+  async registerAdmin(adminData: {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+  }) {
+    return this.request('/api/admin/register', {
+      method: 'POST',
+      body: JSON.stringify(adminData),
+    });
+  }
 }
 
 export const apiClient = new ApiClient(API_URL);
