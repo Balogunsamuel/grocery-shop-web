@@ -5,8 +5,8 @@ import type { CartItem, User } from "./types"
 interface CartStore {
   items: CartItem[]
   addItem: (item: Omit<CartItem, "quantity">) => void
-  removeItem: (id: number) => void
-  updateQuantity: (id: number, quantity: number) => void
+  removeItem: (id: string | number) => void
+  updateQuantity: (id: string | number, quantity: number) => void
   clearCart: () => void
   getTotalItems: () => number
   getTotalPrice: () => number
@@ -14,11 +14,11 @@ interface CartStore {
 
 interface UserStore {
   user: User | null
-  wishlist: number[]
+  wishlist: (string | number)[]
   setUser: (user: User | null) => void
   logout: () => void
-  toggleWishlist: (productId: number) => void
-  isInWishlist: (productId: number) => boolean
+  toggleWishlist: (productId: string | number) => void
+  isInWishlist: (productId: string | number) => boolean
 }
 
 export const useCartStore = create<CartStore>()(

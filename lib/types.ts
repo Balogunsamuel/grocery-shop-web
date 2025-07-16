@@ -1,30 +1,31 @@
 export interface Product {
-  id: number
+  id: string | number
   name: string
   price: number
   originalPrice?: number
   image: string
   images: string[]
-  rating: number
-  reviewCount: number
+  rating?: number
+  reviewCount?: number
   category: string
   categoryId: number
-  brand: string
+  brand?: string
   inStock: boolean
   stockCount: number
   description: string
   features: string[]
-  nutritionFacts: {
-    calories: number
-    carbs: string
-    fiber: string
-    sugar: string
-    protein: string
-    fat: string
+  nutritionFacts?: {
+    calories?: number
+    carbs?: string
+    fiber?: string
+    sugar?: string
+    protein?: string
+    fat?: string
   }
-  tags: string[]
-  weight: string
-  origin: string
+  tags?: string[]
+  weight?: string
+  origin?: string
+  sku?: string
 }
 
 export interface Category {
@@ -37,7 +38,7 @@ export interface Category {
 }
 
 export interface CartItem {
-  id: number
+  id: string | number
   name: string
   price: number
   image: string

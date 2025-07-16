@@ -12,6 +12,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ArrowLeft, MapPin, CreditCard, Package, Heart, Settings, Bell, LogOut, Edit } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useUserStore } from "@/lib/store"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 const orderHistory = [
   {
@@ -47,33 +50,44 @@ const wishlistItems = [
 ]
 
 export default function ProfilePage() {
+  const { user, logout } = useUserStore()
+  const router = useRouter()
+  
   const [userInfo, setUserInfo] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    avatar: "/placeholder.svg",
+    name: user?.name || "John Doe",
+    email: user?.email || "john.doe@example.com",
+    phone: user?.phone || "+1 (555) 123-4567",
+    avatar: user?.avatar || "/placeholder.svg",
   })
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login")
+    } else {
+      setUserInfo({
+        name: user.name || "John Doe",
+        email: user.email || "john.doe@example.com",
+        phone: user.phone || "+1 (555) 123-4567",
+        avatar: user.avatar || "/placeholder.svg",
+      })
+    }
+  }, [user, router])
 
   const [addresses, setAddresses] = useState([
     {
       id: 1,
       type: "Home",
-      street: "123 Main Street",
-      city: "New York",
-      state: "NY",
-      zipCode: "10001",
+      street: user?.address?.street || "123 Main Street",
+      city: user?.address?.city || "New York",
+      state: user?.address?.state || "NY",
+      zipCode: user?.address?.zipCode || "10001",
       isDefault: true,
     },
-    {
-      id: 2,
-      type: "Work",
-      street: "456 Business Ave",
-      city: "New York",
-      state: "NY",
-      zipCode: "10002",
-      isDefault: false,
-    },
   ])
+
+  if (!user) {
+    return null
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
@@ -147,6 +161,10 @@ export default function ProfilePage() {
                   <Button
                     variant="ghost"
                     className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => {
+                      logout()
+                      router.push("/login")
+                    }}
                   >
                     <LogOut className="h-4 w-4 mr-3" />
                     Sign Out

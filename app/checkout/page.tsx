@@ -10,31 +10,32 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { CreditCard, Truck, Clock, Zap, Shield, Lock } from "lucide-react"
+import { CreditCard, Truck, Clock, Zap, Shield, Lock, ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useCartStore } from "@/lib/store"
+import { useCartStore, useUserStore } from "@/lib/store"
 import { useRouter } from "next/navigation"
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore()
+  const { user } = useUserStore()
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
   const [deliveryOption, setDeliveryOption] = useState("standard")
   const [paymentMethod, setPaymentMethod] = useState("card")
   const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    phone: "",
+    email: user?.email || "",
+    firstName: user?.name?.split(" ")[0] || "",
+    lastName: user?.name?.split(" ").slice(1).join(" ") || "",
+    address: user?.address?.street || "",
+    city: user?.address?.city || "",
+    state: user?.address?.state || "",
+    zipCode: user?.address?.zipCode || "",
+    phone: user?.phone || "",
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-    nameOnCard: "",
+    nameOnCard: user?.name || "",
   })
 
   const subtotal = getTotalPrice()
@@ -52,6 +53,12 @@ export default function CheckoutPage() {
       router.push("/cart")
     }
   }, [items, router])
+
+  useEffect(() => {
+    if (!user) {
+      router.push(`/login?redirect=${encodeURIComponent("/checkout")}`)
+    }
+  }, [user, router])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -107,6 +114,12 @@ export default function CheckoutPage() {
           deliveryFee,
           tax,
           subtotal,
+          customerInfo: {
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            phone: formData.phone,
+            userId: user.id,
+          },
         }
 
         const orderResponse = await fetch("/api/orders", {
@@ -128,7 +141,7 @@ export default function CheckoutPage() {
     }
   }
 
-  if (items.length === 0) {
+  if (items.length === 0 || !user) {
     return null
   }
 
@@ -138,6 +151,11 @@ export default function CheckoutPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Checkout</h1>
           <p className="text-gray-600 mt-2">Complete your order</p>
+          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800">
+              <span className="font-medium">Logged in as:</span> {user.name} ({user.email})
+            </p>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -151,6 +169,7 @@ export default function CheckoutPage() {
                     1
                   </div>
                   Contact Information
+                  <Badge variant="secondary" className="ml-2">Pre-filled</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -198,6 +217,7 @@ export default function CheckoutPage() {
                     2
                   </div>
                   Delivery Address
+                  {user?.address && <Badge variant="secondary" className="ml-2">Pre-filled</Badge>}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -443,6 +463,7 @@ export default function CheckoutPage() {
                 {/* Back to Cart */}
                 <Link href="/cart">
                   <Button variant="outline" className="w-full bg-transparent">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Cart
                   </Button>
                 </Link>
