@@ -69,7 +69,7 @@ A full-stack grocery ecommerce platform with separate customer and admin interfa
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Balogunsamuel/grocery-shop-web.git
 cd grocery-app-admin-backend
 ```
 
