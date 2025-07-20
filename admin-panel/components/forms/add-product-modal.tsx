@@ -97,7 +97,7 @@ export function AddProductModal({ isOpen, onClose, onSuccess }: AddProductModalP
     }
   };
 
-  const handleInputChange = (field: keyof ProductFormData, value: any) => {
+  const handleInputChange = (field: keyof ProductFormData, value: string | number | boolean | string[]) => {
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
       

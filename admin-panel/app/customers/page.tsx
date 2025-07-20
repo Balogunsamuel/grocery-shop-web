@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminLayout } from '@/components/layout/admin-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,9 +56,9 @@ export default function CustomersPage() {
 
   useEffect(() => {
     fetchCustomers();
-  }, [currentPage, roleFilter]);
+  }, [fetchCustomers]);
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await apiClient.getUsers(currentPage, 10, roleFilter || undefined);
@@ -71,7 +71,7 @@ export default function CustomersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, roleFilter]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

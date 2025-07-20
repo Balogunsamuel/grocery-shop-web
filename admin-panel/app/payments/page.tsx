@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminLayout } from '@/components/layout/admin-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,7 +30,7 @@ interface Payment {
   currency: string;
   payment_status: string;
   stripe_payment_intent_id?: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -77,9 +77,9 @@ export default function PaymentsPage() {
 
   useEffect(() => {
     fetchPayments();
-  }, [currentPage]);
+  }, [currentPage, fetchPayments]);
 
-  const fetchPayments = async () => {
+  const fetchPayments = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await apiClient.getPayments(currentPage, 10);
@@ -92,7 +92,7 @@ export default function PaymentsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage]);
 
   const filteredPayments = payments.filter(payment =>
     payment.session_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -253,7 +253,7 @@ export default function PaymentsPage() {
                           <TableCell>
                             <div className="flex items-center space-x-2">
                               <StatusIcon className={`h-4 w-4 ${statusConfig?.color}`} />
-                              <Badge variant={statusConfig?.variant as any}>
+                              <Badge variant={statusConfig?.variant as "default" | "secondary" | "destructive" | "outline"}>
                                 {statusConfig?.label || payment.payment_status}
                               </Badge>
                             </div>

@@ -87,14 +87,14 @@ class ApiClient {
     return this.request(`/api/products/${id}`);
   }
 
-  async createProduct(productData: any) {
+  async createProduct(productData: Record<string, unknown>) {
     return this.request('/api/products/', {
       method: 'POST',
       body: JSON.stringify(productData),
     });
   }
 
-  async updateProduct(id: string, productData: any) {
+  async updateProduct(id: string, productData: Record<string, unknown>) {
     return this.request(`/api/products/${id}`, {
       method: 'PUT',
       body: JSON.stringify(productData),
@@ -112,14 +112,14 @@ class ApiClient {
     return this.request('/api/categories/');
   }
 
-  async createCategory(categoryData: any) {
+  async createCategory(categoryData: Record<string, unknown>) {
     return this.request('/api/categories/', {
       method: 'POST',
       body: JSON.stringify(categoryData),
     });
   }
 
-  async updateCategory(id: string, categoryData: any) {
+  async updateCategory(id: string, categoryData: Record<string, unknown>) {
     return this.request(`/api/categories/${id}`, {
       method: 'PUT',
       body: JSON.stringify(categoryData),

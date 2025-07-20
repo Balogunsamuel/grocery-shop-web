@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminLayout } from '@/components/layout/admin-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { apiClient } from '@/lib/api';
 import { formatCurrency, formatDate, formatRelativeTime } from '@/lib/utils';
@@ -17,7 +16,6 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  AlertTriangle,
   MapPin,
   User
 } from 'lucide-react';
@@ -98,9 +96,9 @@ export default function OrdersPage() {
 
   useEffect(() => {
     fetchOrders();
-  }, [currentPage, statusFilter]);
+  }, [currentPage, statusFilter, fetchOrders]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await apiClient.getOrders(currentPage, 10, statusFilter || undefined);
@@ -113,7 +111,7 @@ export default function OrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, statusFilter]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {

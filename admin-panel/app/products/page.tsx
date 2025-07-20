@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminLayout } from '@/components/layout/admin-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,9 +51,9 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, showInactive]);
+  }, [currentPage, showInactive, fetchProducts]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await apiClient.getProducts(currentPage, 10, showInactive);
@@ -66,7 +66,7 @@ export default function ProductsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, showInactive]);
 
   const handleDeleteProduct = async (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {
@@ -152,7 +152,7 @@ export default function ProductsPage() {
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <p className="text-sm text-blue-800">
               <strong>Auto-Sync Enabled:</strong> All products added here will automatically appear in the customer app. 
-              Use the "Refresh" button to reload if products don't appear immediately.
+              Use the &quot;Refresh&quot; button to reload if products don&apos;t appear immediately.
             </p>
           </div>
         </div>
@@ -281,7 +281,7 @@ export default function ProductsPage() {
                           </TableCell>
                           <TableCell>
                             <Badge 
-                              variant={stockInfo.variant as any}
+                              variant={stockInfo.variant as "default" | "secondary" | "destructive" | "outline"}
                               className="flex items-center space-x-1"
                             >
                               <StockIcon className="h-3 w-3" />

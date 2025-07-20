@@ -11,9 +11,6 @@ import {
   Package,
   Users,
   DollarSign,
-  TrendingUp,
-  TrendingDown,
-  Clock,
   AlertTriangle,
 } from 'lucide-react';
 
@@ -39,10 +36,24 @@ interface DashboardStats {
   };
 }
 
+interface Order {
+  _id: string;
+  created_at: string;
+  total_price: number;
+  status: string;
+}
+
+interface Product {
+  _id: string;
+  name: string;
+  total_quantity: number;
+  total_revenue: number;
+}
+
 interface DashboardData {
   stats: DashboardStats;
-  recent_orders: any[];
-  top_products: any[];
+  recent_orders: Order[];
+  top_products: Product[];
 }
 
 export default function DashboardPage() {
@@ -238,7 +249,7 @@ export default function DashboardPage() {
                           {formatCurrency(order.total_price)}
                         </p>
                         <Badge 
-                          variant={getOrderStatusColor(order.status) as any}
+                          variant={getOrderStatusColor(order.status) as "default" | "secondary" | "destructive" | "outline"}
                           className="text-xs"
                         >
                           {order.status.replace('_', ' ')}
