@@ -182,14 +182,14 @@
                 document.getElementById('backend-result').innerHTML = '⏳ Testing backend API...';
                 
                 // Test basic backend health
-                const healthResponse = await fetch('http://localhost:8000/health');
+                const healthResponse = await fetch('https://grocery-shop-web.onrender.com/health');
                 const healthData = await healthResponse.json();
                 
                 let result = `✅ Backend Health: ${healthData.status}\n`;
                 
                 // Test categories (no auth needed)
                 try {
-                    const categoriesResponse = await fetch('http://localhost:8000/api/categories/');
+                    const categoriesResponse = await fetch('https://grocery-shop-web.onrender.com/api/categories/');
                     const categoriesData = await categoriesResponse.json();
                     result += `✅ Categories API: ${categoriesData.data?.length || 0} categories found\n`;
                     

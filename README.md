@@ -112,7 +112,7 @@ python init_data.py
 python main.py
 ```
 
-Backend will be available at: `http://localhost:8000`
+Backend will be available at: `https://grocery-shop-web.onrender.com`
 
 ### 3. Customer App Setup
 
@@ -121,7 +121,7 @@ Backend will be available at: `http://localhost:8000`
 npm install
 
 # Create environment file
-echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+echo "NEXT_PUBLIC_API_URL=https://grocery-shop-web.onrender.com" > .env.local
 
 # Start customer app
 npm run dev -- --port 3001
@@ -139,7 +139,7 @@ cd admin-panel
 npm install
 
 # Create environment file
-echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+echo "NEXT_PUBLIC_API_URL=https://grocery-shop-web.onrender.com" > .env.local
 
 # Start admin panel
 npm run dev
@@ -229,8 +229,8 @@ vercel --prod
 ## 📚 API Documentation
 
 Once the backend is running, visit:
-- **Swagger UI**: `http://localhost:8000/docs`
-- **ReDoc**: `http://localhost:8000/redoc`
+- **Swagger UI**: `https://grocery-shop-web.onrender.com/docs`
+- **ReDoc**: `https://grocery-shop-web.onrender.com/redoc`
 
 ### Key Endpoints
 
@@ -315,7 +315,7 @@ grocery-app-admin-backend/
 
 #### 1. Products not showing in customer app
 **Solution:** Ensure all three services are running on correct ports:
-- Backend: `http://localhost:8000`
+- Backend: `https://grocery-shop-web.onrender.com`
 - Customer App: `http://localhost:3001`
 - Admin Panel: `http://localhost:3000`
 

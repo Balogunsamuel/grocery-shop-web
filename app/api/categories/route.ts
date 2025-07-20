@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import type { ApiResponse } from "@/lib/types"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grocery-shop-web.onrender.com';
 
 export async function GET() {
   try {
