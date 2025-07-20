@@ -54,10 +54,6 @@ export default function CustomersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
-
   const fetchCustomers = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -72,6 +68,10 @@ export default function CustomersPage() {
       setIsLoading(false);
     }
   }, [currentPage, roleFilter]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
