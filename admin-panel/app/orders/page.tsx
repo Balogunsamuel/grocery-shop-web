@@ -94,10 +94,6 @@ export default function OrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [currentPage, statusFilter, fetchOrders]);
-
   const fetchOrders = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -112,6 +108,10 @@ export default function OrdersPage() {
       setIsLoading(false);
     }
   }, [currentPage, statusFilter]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [currentPage, statusFilter, fetchOrders]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {

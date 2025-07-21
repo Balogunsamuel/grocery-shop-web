@@ -49,10 +49,6 @@ export default function ProductsPage() {
   const [showInactive, setShowInactive] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [currentPage, showInactive, fetchProducts]);
-
   const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -67,6 +63,10 @@ export default function ProductsPage() {
       setIsLoading(false);
     }
   }, [currentPage, showInactive]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage, showInactive, fetchProducts]);
 
   const handleDeleteProduct = async (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {

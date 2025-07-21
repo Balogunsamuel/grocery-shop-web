@@ -75,10 +75,6 @@ export default function PaymentsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchPayments();
-  }, [currentPage, fetchPayments]);
-
   const fetchPayments = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -93,6 +89,10 @@ export default function PaymentsPage() {
       setIsLoading(false);
     }
   }, [currentPage]);
+
+  useEffect(() => {
+    fetchPayments();
+  }, [currentPage, fetchPayments]);
 
   const filteredPayments = payments.filter(payment =>
     payment.session_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
