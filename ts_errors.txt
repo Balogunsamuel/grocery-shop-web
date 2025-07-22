@@ -1,0 +1,135 @@
+app/admin/layout.tsx(18,17): error TS2339: Property 'isAuthenticated' does not exist on type 'UserStore'.
+app/admin/layout.tsx(18,34): error TS2339: Property 'isAdmin' does not exist on type 'UserStore'.
+app/admin/orders/page.tsx(177,46): error TS2339: Property 'date' does not exist on type 'Order'.
+app/admin/orders/page.tsx(196,49): error TS2339: Property 'paymentStatus' does not exist on type 'Order'.
+app/admin/orders/page.tsx(243,45): error TS2339: Property 'shipping' does not exist on type 'Order'.
+app/admin/orders/page.tsx(245,36): error TS2339: Property 'discount' does not exist on type 'Order'.
+app/admin/orders/page.tsx(248,48): error TS2339: Property 'discount' does not exist on type 'Order'.
+app/admin/page.tsx(9,15): error TS2305: Module '"@/lib/types"' has no exported member 'Analytics'.
+app/admin/page.tsx(145,43): error TS7006: Parameter 'product' implicitly has an 'any' type.
+app/admin/page.tsx(145,52): error TS7006: Parameter 'index' implicitly has an 'any' type.
+app/admin/page.tsx(181,44): error TS7006: Parameter 'order' implicitly has an 'any' type.
+app/admin/products/page.tsx(444,24): error TS18048: 'product.originalPrice' is possibly 'undefined'.
+app/admin/products/page.tsx(472,92): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+app/api/analytics/dashboard/route.ts(3,28): error TS2305: Module '"@/lib/types"' has no exported member 'Analytics'.
+app/api/analytics/dashboard/route.ts(7,23): error TS2341: Property 'orders' is private and only accessible within class 'Database'.
+app/api/analytics/dashboard/route.ts(7,30): error TS2339: Property 'findAll' does not exist on type 'Order[]'.
+app/api/analytics/dashboard/route.ts(8,25): error TS2341: Property 'products' is private and only accessible within class 'Database'.
+app/api/analytics/dashboard/route.ts(8,34): error TS2339: Property 'findAll' does not exist on type 'Product[]'.
+app/api/analytics/dashboard/route.ts(9,22): error TS2341: Property 'users' is private and only accessible within class 'Database'.
+app/api/analytics/dashboard/route.ts(9,28): error TS2339: Property 'findAll' does not exist on type 'User[]'.
+app/api/analytics/dashboard/route.ts(11,41): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+app/api/analytics/dashboard/route.ts(11,46): error TS7006: Parameter 'order' implicitly has an 'any' type.
+app/api/analytics/dashboard/route.ts(13,42): error TS7006: Parameter 'u' implicitly has an 'any' type.
+app/api/analytics/dashboard/route.ts(22,51): error TS7006: Parameter 'product' implicitly has an 'any' type.
+app/api/analytics/dashboard/route.ts(30,27): error TS2341: Property 'categories' is private and only accessible within class 'Database'.
+app/api/analytics/dashboard/route.ts(30,38): error TS2339: Property 'findAll' does not exist on type 'Category[]'.
+app/api/analytics/dashboard/route.ts(31,43): error TS7006: Parameter 'category' implicitly has an 'any' type.
+app/api/analytics/dashboard/route.ts(65,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/analytics/dashboard/route.ts(70,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/login/route.ts(11,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/login/route.ts(32,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/login/route.ts(41,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/login/route.ts(51,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/register/route.ts(11,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/register/route.ts(32,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/register/route.ts(41,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/auth/register/route.ts(51,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/categories/route.ts(70,34): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/categories/route.ts(81,11): error TS2552: Cannot find name 'categories'. Did you mean 'category'?
+app/api/categories/route.ts(87,5): error TS2552: Cannot find name 'categories'. Did you mean 'category'?
+app/api/categories/route.ts(89,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/categories/route.ts(95,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(8,24): error TS2341: Property 'products' is private and only accessible within class 'Database'.
+app/api/products/[id]/route.ts(8,33): error TS2339: Property 'findById' does not exist on type 'Product[]'.
+app/api/products/[id]/route.ts(11,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(20,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(25,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(40,24): error TS2341: Property 'products' is private and only accessible within class 'Database'.
+app/api/products/[id]/route.ts(40,33): error TS2339: Property 'update' does not exist on type 'Product[]'.
+app/api/products/[id]/route.ts(43,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(52,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(58,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(71,24): error TS2341: Property 'products' is private and only accessible within class 'Database'.
+app/api/products/[id]/route.ts(71,33): error TS2339: Property 'delete' does not exist on type 'Product[]'.
+app/api/products/[id]/route.ts(74,32): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(83,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/api/products/[id]/route.ts(88,30): error TS2314: Generic type 'ApiResponse<T>' requires 1 type argument(s).
+app/category/[id]/page.tsx(207,60): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/category/[id]/page.tsx(210,50): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/category/[id]/page.tsx(210,69): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/checkout/page.tsx(121,21): error TS18047: 'user' is possibly 'null'.
+components/ui/calendar.tsx(57,9): error TS2353: Object literal may only specify known properties, and 'IconLeft' does not exist in type 'Partial<CustomComponents>'.
+components/ui/chart.tsx(119,7): error TS2339: Property 'payload' does not exist on type 'Omit<Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; includeHidden?: boolean | undefined; ... 17 more ...; axisId?: AxisId | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }, "ref">'.
+components/ui/chart.tsx(124,7): error TS2339: Property 'label' does not exist on type 'Omit<Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; includeHidden?: boolean | undefined; ... 17 more ...; axisId?: AxisId | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }, "ref">'.
+components/ui/chart.tsx(188,25): error TS7006: Parameter 'item' implicitly has an 'any' type.
+components/ui/chart.tsx(188,31): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/ui/chart.tsx(264,41): error TS2344: Type '"payload" | "verticalAlign"' does not satisfy the constraint '"string" | "media" | "spacing" | "order" | "height" | "width" | "transformOrigin" | "rotate" | "scale" | "cursor" | "fill" | "stroke" | "strokeWidth" | "fontFamily" | "fontSize" | ... 428 more ... | "onBBoxUpdate"'.
+  Type '"payload"' is not assignable to type '"string" | "media" | "spacing" | "order" | "height" | "width" | "transformOrigin" | "rotate" | "scale" | "cursor" | "fill" | "stroke" | "strokeWidth" | "fontFamily" | "fontSize" | ... 428 more ... | "onBBoxUpdate"'.
+components/ui/chart.tsx(275,19): error TS2339: Property 'length' does not exist on type '{}'.
+components/ui/chart.tsx(288,18): error TS2339: Property 'map' does not exist on type '{}'.
+components/ui/chart.tsx(288,23): error TS7006: Parameter 'item' implicitly has an 'any' type.
+lib/auth.ts(14,21): error TS2341: Property 'users' is private and only accessible within class 'Database'.
+lib/auth.ts(14,27): error TS2339: Property 'findByEmail' does not exist on type 'User[]'.
+lib/auth.ts(35,29): error TS2341: Property 'users' is private and only accessible within class 'Database'.
+lib/auth.ts(35,35): error TS2339: Property 'findByEmail' does not exist on type 'User[]'.
+lib/auth.ts(41,21): error TS2341: Property 'users' is private and only accessible within class 'Database'.
+lib/auth.ts(41,27): error TS2339: Property 'create' does not exist on type 'User[]'.
+lib/database.ts(1,55): error TS2305: Module '"./types"' has no exported member 'PromoCode'.
+lib/database.ts(5,11): error TS2687: All declarations of 'products' must have identical modifiers.
+lib/database.ts(33,7): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Product'.
+lib/database.ts(65,7): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Product'.
+lib/database.ts(97,7): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Product'.
+lib/database.ts(129,7): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Product'.
+lib/database.ts(161,7): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Product'.
+lib/database.ts(193,7): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Product'.
+lib/database.ts(200,11): error TS2687: All declarations of 'categories' must have identical modifiers.
+lib/database.ts(208,7): error TS2353: Object literal may only specify known properties, and 'isActive' does not exist in type 'Category'.
+lib/database.ts(219,7): error TS2353: Object literal may only specify known properties, and 'isActive' does not exist in type 'Category'.
+lib/database.ts(230,7): error TS2353: Object literal may only specify known properties, and 'isActive' does not exist in type 'Category'.
+lib/database.ts(241,7): error TS2353: Object literal may only specify known properties, and 'isActive' does not exist in type 'Category'.
+lib/database.ts(247,11): error TS2687: All declarations of 'users' must have identical modifiers.
+lib/database.ts(259,9): error TS2353: Object literal may only specify known properties, and 'marketing' does not exist in type '{ notifications: boolean; newsletter: boolean; }'.
+lib/database.ts(265,11): error TS2687: All declarations of 'orders' must have identical modifiers.
+lib/database.ts(270,3): error TS2300: Duplicate identifier 'products'.
+lib/database.ts(270,3): error TS2687: All declarations of 'products' must have identical modifiers.
+lib/database.ts(270,3): error TS2717: Subsequent property declarations must have the same type.  Property 'products' must be of type 'Product[]', but here has type '{ findAll: () => Product[]; findById: (id: number) => Product | undefined; findByCategory: (categoryId: number) => Product[]; create: (product: Omit<Product, "id" | ... 1 more ... | "updatedAt">) => { ...; }; update: (id: number, updates: Partial<...>) => Product | null; delete: (id: number) => boolean; }'.
+lib/database.ts(271,50): error TS2339: Property 'isActive' does not exist on type 'Product'.
+lib/database.ts(272,74): error TS2339: Property 'isActive' does not exist on type 'Product'.
+lib/database.ts(273,106): error TS2339: Property 'isActive' does not exist on type 'Product'.
+lib/database.ts(277,22): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+lib/database.ts(287,71): error TS2353: Object literal may only specify known properties, and 'updatedAt' does not exist in type 'Product'.
+lib/database.ts(295,30): error TS2339: Property 'isActive' does not exist on type 'Product'.
+lib/database.ts(303,3): error TS2300: Duplicate identifier 'categories'.
+lib/database.ts(303,3): error TS2687: All declarations of 'categories' must have identical modifiers.
+lib/database.ts(303,3): error TS2717: Subsequent property declarations must have the same type.  Property 'categories' must be of type 'Category[]', but here has type '{ findAll: () => Category[]; findById: (id: number) => Category | undefined; create: (category: Omit<Category, "id" | "createdAt" | "updatedAt">) => { ...; }; update: (id: number, updates: Partial<...>) => Category | null; delete: (id: number) => boolean; }'.
+lib/database.ts(304,52): error TS2339: Property 'isActive' does not exist on type 'Category'.
+lib/database.ts(305,76): error TS2339: Property 'isActive' does not exist on type 'Category'.
+lib/database.ts(319,75): error TS2353: Object literal may only specify known properties, and 'updatedAt' does not exist in type 'Category'.
+lib/database.ts(327,32): error TS2339: Property 'isActive' does not exist on type 'Category'.
+lib/database.ts(335,3): error TS2300: Duplicate identifier 'users'.
+lib/database.ts(335,3): error TS2687: All declarations of 'users' must have identical modifiers.
+lib/database.ts(335,3): error TS2717: Subsequent property declarations must have the same type.  Property 'users' must be of type 'User[]', but here has type '{ findAll: () => User[]; findById: (id: string) => User | undefined; findByEmail: (email: string) => User | undefined; create: (user: Omit<User, "id" | "createdAt" | "updatedAt">) => { ...; }; update: (id: string, updates: Partial<...>) => User | null; }'.
+lib/database.ts(336,47): error TS2339: Property 'isActive' does not exist on type 'User'.
+lib/database.ts(337,71): error TS2339: Property 'isActive' does not exist on type 'User'.
+lib/database.ts(338,83): error TS2339: Property 'isActive' does not exist on type 'User'.
+lib/database.ts(352,65): error TS2353: Object literal may only specify known properties, and 'updatedAt' does not exist in type 'User'.
+lib/database.ts(360,3): error TS2300: Duplicate identifier 'orders'.
+lib/database.ts(360,3): error TS2687: All declarations of 'orders' must have identical modifiers.
+lib/database.ts(360,3): error TS2717: Subsequent property declarations must have the same type.  Property 'orders' must be of type 'Order[]', but here has type '{ findAll: () => Order[]; findById: (id: string) => Order | undefined; findByUserId: (userId: string) => Order[]; create: (order: Omit<Order, "id" | "createdAt" | "updatedAt">) => { ...; }; update: (id: string, updates: Partial<...>) => Order | null; }'.
+lib/database.ts(377,67): error TS2353: Object literal may only specify known properties, and 'updatedAt' does not exist in type 'Order'.
+lib/utils.ts(45,81): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+lib/utils.ts(60,44): error TS18048: 'b.rating' is possibly 'undefined'.
+lib/utils.ts(60,55): error TS18048: 'a.rating' is possibly 'undefined'.
+lib/utils.ts(64,44): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+lib/utils.ts(64,51): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+lib/utils.ts(67,37): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+lib/utils.ts(67,83): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.

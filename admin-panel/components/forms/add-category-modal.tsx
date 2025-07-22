@@ -74,7 +74,7 @@ export function AddCategoryModal({ isOpen, onClose, onSuccess }: AddCategoryModa
     setIsLoading(true);
 
     try {
-      const response = await apiClient.createCategory(formData);
+      const response = await apiClient.createCategory(formData as any);
       if (response.success) {
         toast({
           title: 'Success',
