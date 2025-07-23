@@ -1,0 +1,5 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: railwayapp
+Source: https://github.com/railwayapp/cli
+Copyright: Railway <contact@railway.com>
+License: MIT

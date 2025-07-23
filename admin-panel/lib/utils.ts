@@ -12,14 +12,19 @@ export function formatCurrency(amount: number) {
   }).format(amount)
 }
 
-export function formatDate(date: string | Date) {
+export function formatDate(date: string | Date | null | undefined) {
+  if (!date) return 'N/A'
+  
+  const parsedDate = new Date(date)
+  if (isNaN(parsedDate.getTime())) return 'Invalid Date'
+  
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(new Date(date))
+  }).format(parsedDate)
 }
 
 export function formatRelativeTime(date: string | Date) {

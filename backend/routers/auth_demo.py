@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from datetime import timedelta
-from models import UserLogin, Token, ApiResponse
-from auth_demo import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from models import UserLogin, UserCreate, Token, ApiResponse, User, UserRole
+from auth_demo import authenticate_user, create_access_token, create_user, get_password_hash, ACCESS_TOKEN_EXPIRE_MINUTES
 import logging
 
 # Configure logging
@@ -55,6 +55,69 @@ async def login_user(user_credentials: UserLogin):
         raise HTTPException(
             status_code=500,
             detail=f"Login failed: {str(e)}"
+        )
+
+@router.post("/register", response_model=ApiResponse)
+async def register_user(user_data: UserCreate):
+    """
+    Register a new user (Demo version)
+    """
+    try:
+        logger.info(f"Demo registration attempt for: {user_data.email}")
+        
+        # Check if user already exists
+        from auth_demo import get_user_by_email
+        existing_user = await get_user_by_email(user_data.email)
+        if existing_user:
+            logger.warning("Email already registered")
+            raise HTTPException(
+                status_code=400,
+                detail="Email already registered"
+            )
+        
+        # Create new user
+        hashed_password = get_password_hash(user_data.password)
+        user_dict = {
+            "_id": f"user_{len(user_data.email)}",  # Simple ID generation for demo
+            "name": user_data.name,
+            "email": user_data.email,
+            "phone": user_data.phone,
+            "role": "customer",
+            "hashed_password": hashed_password,
+            "is_verified": True
+        }
+        
+        # Save user to demo database
+        await create_user(user_dict)
+        
+        logger.info(f"User registered successfully: {user_data.email}")
+        
+        # Create access token
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user_dict["email"]}, expires_delta=access_token_expires
+        )
+        
+        # Remove password from response
+        user_dict.pop("hashed_password", None)
+        
+        return ApiResponse(
+            success=True,
+            message="Registration successful",
+            data={
+                "access_token": access_token,
+                "token_type": "bearer", 
+                "user": user_dict
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Registration error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Registration failed: {str(e)}"
         )
 
 @router.get("/health")

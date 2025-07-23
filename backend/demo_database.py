@@ -85,6 +85,26 @@ class DemoDatabase:
     
     async def get_product_by_id(self, product_id: str) -> Optional[dict]:
         return products_db.get(product_id)
+    
+    async def create_product(self, product_data: dict) -> dict:
+        import time
+        product_id = f"prod_{int(time.time())}"
+        product_data["_id"] = product_id
+        products_db[product_id] = product_data
+        return product_data
+    
+    async def update_product(self, product_id: str, product_data: dict) -> Optional[dict]:
+        if product_id in products_db:
+            product_data["_id"] = product_id
+            products_db[product_id] = product_data
+            return product_data
+        return None
+    
+    async def delete_product(self, product_id: str) -> bool:
+        if product_id in products_db:
+            del products_db[product_id]
+            return True
+        return False
 
 # Global demo database instance
 demo_db = DemoDatabase()

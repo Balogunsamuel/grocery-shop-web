@@ -38,7 +38,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      logout();
+      // Only logout if it's not a network/404 error (server might be down)
+      if (error instanceof Error && !error.message.includes('404')) {
+        logout();
+      }
     } finally {
       setIsLoading(false);
     }

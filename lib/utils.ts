@@ -13,12 +13,17 @@ export function formatPrice(price: number): string {
   }).format(price)
 }
 
-export function formatDate(date: string): string {
+export function formatDate(date: string | null | undefined): string {
+  if (!date) return 'N/A'
+  
+  const parsedDate = new Date(date)
+  if (isNaN(parsedDate.getTime())) return 'Invalid Date'
+  
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-  }).format(new Date(date))
+  }).format(parsedDate)
 }
 
 export function calculateDiscount(originalPrice: number, currentPrice: number): number {
@@ -42,7 +47,7 @@ export function filterProducts(
 
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
 
-    const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand)
+    const matchesBrand = selectedBrands.length === 0 || (product.brand && selectedBrands.includes(product.brand))
 
     return matchesSearch && matchesCategory && matchesPrice && matchesBrand
   })
@@ -57,14 +62,14 @@ export function sortProducts(products: Product[], sortBy: string): Product[] {
     case "price-high":
       return sortedProducts.sort((a, b) => b.price - a.price)
     case "rating":
-      return sortedProducts.sort((a, b) => b.rating - a.rating)
+      return sortedProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0))
     case "name":
       return sortedProducts.sort((a, b) => a.name.localeCompare(b.name))
     case "newest":
-      return sortedProducts.sort((a, b) => b.id - a.id)
+      return sortedProducts.sort((a, b) => Number(b.id) - Number(a.id))
     case "discount":
       return sortedProducts.sort(
-        (a, b) => calculateDiscount(b.originalPrice, b.price) - calculateDiscount(a.originalPrice, a.price),
+        (a, b) => calculateDiscount(b.originalPrice || b.price, b.price) - calculateDiscount(a.originalPrice || a.price, a.price),
       )
     default:
       return sortedProducts
